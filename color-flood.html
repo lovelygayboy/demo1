@@ -1,0 +1,2727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>萌染大作战</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #FFE4E1 0%, #FFF0F5 50%, #E6E6FA 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* 主页 */
+        #homePage.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 主页卡通背景装饰 */
+        .bg-decor {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.25;
+            pointer-events: none;
+        }
+        
+        .bg-decor-1 {
+            width: 120px; height: 120px;
+            background: #FFB6C1;
+            top: 8%; left: 5%;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: floatA 6s ease-in-out infinite;
+        }
+        
+        .bg-decor-2 {
+            width: 80px; height: 80px;
+            background: #87CEEB;
+            top: 15%; right: 10%;
+            border-radius: 40% 60% 50% 50%;
+            animation: floatB 8s ease-in-out infinite;
+        }
+        
+        .bg-decor-3 {
+            width: 100px; height: 100px;
+            background: #98D8C8;
+            bottom: 20%; left: 8%;
+            border-radius: 50% 40% 60% 50%;
+            animation: floatA 7s ease-in-out infinite reverse;
+        }
+        
+        .bg-decor-4 {
+            width: 60px; height: 60px;
+            background: #DDA0DD;
+            top: 40%; right: 6%;
+            border-radius: 45% 55% 50% 50%;
+            animation: floatB 5s ease-in-out infinite;
+        }
+        
+        .bg-decor-5 {
+            width: 90px; height: 90px;
+            background: #FFEAA7;
+            bottom: 10%; right: 15%;
+            border-radius: 50% 50% 40% 60%;
+            animation: floatA 9s ease-in-out infinite;
+        }
+        
+        .bg-decor-6 {
+            width: 70px; height: 70px;
+            background: #FFB7B2;
+            bottom: 35%; left: 15%;
+            border-radius: 55% 45% 50% 50%;
+            animation: floatB 6s ease-in-out infinite reverse;
+        }
+        
+        .bg-decor-7 {
+            width: 50px; height: 50px;
+            background: #B5EAD7;
+            top: 60%; left: 3%;
+            border-radius: 50%;
+            animation: floatA 7s ease-in-out infinite;
+        }
+        
+        .bg-decor-8 {
+            width: 110px; height: 110px;
+            background: #C7CEEA;
+            top: 5%; left: 50%;
+            border-radius: 50% 40% 60% 50%;
+            animation: floatB 10s ease-in-out infinite;
+        }
+        
+        /* 小星星装饰 */
+        .bg-star {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.2;
+        }
+        
+        .bg-star::before {
+            content: '★';
+            font-size: 20px;
+            color: #FFD700;
+        }
+        
+        .bg-star-1 { top: 25%; left: 20%; animation: twinkle 3s ease-in-out infinite; }
+        .bg-star-2 { top: 55%; right: 18%; animation: twinkle 4s ease-in-out infinite 1s; }
+        .bg-star-3 { bottom: 25%; left: 40%; animation: twinkle 3.5s ease-in-out infinite 0.5s; }
+        .bg-star-4 { top: 10%; right: 30%; animation: twinkle 5s ease-in-out infinite 2s; }
+        
+        @keyframes floatA {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        
+        @keyframes floatB {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(-5deg); }
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.15; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.3); }
+        }
+        
+        .game-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: #FF6B9D;
+            text-shadow: 3px 3px 0 #FFB6C1, 6px 6px 0 rgba(255,182,193,0.3);
+            margin-bottom: 60px;
+            letter-spacing: 8px;
+        }
+        
+        .menu-btn {
+            width: 200px;
+            padding: 18px 30px;
+            margin: 12px 0;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .btn-pink {
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            color: white;
+        }
+        
+        .btn-blue {
+            background: linear-gradient(135deg, #87CEEB, #6495ED);
+            color: white;
+        }
+        
+        .btn-green {
+            background: linear-gradient(135deg, #98D8C8, #7FCDCD);
+            color: white;
+        }
+        
+        /* 关卡选择页 */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 10px 0;
+        }
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.8);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        
+        .page-title {
+            font-size: 24px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        /* 线性关卡路径 */
+        .level-path {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        
+        .path-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #FFB6C1, #87CEEB, #98D8C8);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .level-nodes {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .level-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .level-node.completed {
+            background: linear-gradient(135deg, #98D8C8, #7FCDCD);
+            color: white;
+        }
+        
+        .level-node.current {
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .level-node.available {
+            background: white;
+            color: #666;
+            border: 3px solid #FFB6C1;
+        }
+        
+        .level-node.locked {
+            background: #E0E0E0;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,157,0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(255,107,157,0); }
+        }
+        
+        .stars {
+            position: absolute;
+            bottom: -20px;
+            font-size: 12px;
+            color: #FFD700;
+        }
+        
+        /* 游戏页面 */
+        .game-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .info-item {
+            background: rgba(255,255,255,0.8);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .info-item span {
+            font-weight: bold;
+            color: #FF6B9D;
+        }
+        
+        /* 进度条 */
+        .progress-bar {
+            width: 100%;
+            max-width: 300px;
+            height: 12px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFB6C1, #FF69B4);
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+        
+        /* 步数进度条 */
+        .step-progress-bar {
+            width: 100%;
+            max-width: 300px;
+            height: 8px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 5px auto 0;
+            position: relative;
+        }
+        
+        .step-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #98D8C8, #7FCDCD);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .step-progress-marker {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: #FF6B9D;
+        }
+        
+        /* 游戏棋盘 */
+        .game-board {
+            display: grid;
+            gap: 4px;
+            margin: 20px auto;
+            width: fit-content;
+            padding: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 15px;
+        }
+        
+        .cell {
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cell:hover {
+            transform: scale(1.05);
+        }
+        
+        .cell.connected {
+            animation: glow 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255,255,255,0.8), 0 0 10px rgba(255,255,255,0.4); }
+            50% { box-shadow: 0 0 15px rgba(255,255,255,1), 0 0 25px rgba(255,255,255,0.6); }
+        }
+        
+        /* ============================================ */
+        /* 主题1：泡泡糖 - CSS图案 */
+        /* ============================================ */
+        
+        /* 图案0: 圆润泡泡（大圆+小圆叠加） */
+        .cell.theme-bubble.shape-0 {
+            border-radius: 50%;
+        }
+        .cell.theme-bubble.shape-0::before {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: inherit;
+            border-radius: 50%;
+            top: -15%;
+            left: 35%;
+            filter: brightness(1.1);
+        }
+        .cell.theme-bubble.shape-0::after {
+            content: '';
+            position: absolute;
+            width: 25%;
+            height: 25%;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            top: 15%;
+            left: 15%;
+        }
+        
+        /* 图案1: 水滴形（上尖下圆） */
+        .cell.theme-bubble.shape-1 {
+            border-radius: 0 50% 50% 50%;
+            transform: rotate(45deg);
+        }
+        .cell.theme-bubble.shape-1::before {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            top: 20%;
+            left: 20%;
+            transform: rotate(-45deg);
+        }
+        
+        /* 图案2: 糖果豆（椭圆+中间条纹） */
+        .cell.theme-bubble.shape-2 {
+            border-radius: 50%;
+        }
+        .cell.theme-bubble.shape-2::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 15%;
+            background: rgba(255,255,255,0.4);
+            top: 42.5%;
+            left: 10%;
+            border-radius: 10px;
+        }
+        .cell.theme-bubble.shape-2::after {
+            content: '';
+            position: absolute;
+            width: 20%;
+            height: 20%;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            top: 15%;
+            left: 15%;
+        }
+        
+        /* 图案3: 棒棒糖（圆形+螺旋线） */
+        .cell.theme-bubble.shape-3 {
+            border-radius: 50%;
+        }
+        .cell.theme-bubble.shape-3::before {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            border: 3px solid rgba(255,255,255,0.5);
+            border-radius: 50%;
+            top: 15%;
+            left: 15%;
+            border-right-color: transparent;
+        }
+        .cell.theme-bubble.shape-3::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            border: 3px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            top: 35%;
+            left: 35%;
+            border-left-color: transparent;
+        }
+        
+        /* 图案4: 棉花糖（多个小圆组合） */
+        .cell.theme-bubble.shape-4 {
+            border-radius: 50%;
+        }
+        .cell.theme-bubble.shape-4::before {
+            content: '';
+            position: absolute;
+            width: 45%;
+            height: 45%;
+            background: inherit;
+            border-radius: 50%;
+            top: -10%;
+            left: 28%;
+            filter: brightness(1.05);
+        }
+        .cell.theme-bubble.shape-4::after {
+            content: '';
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: inherit;
+            border-radius: 50%;
+            top: 35%;
+            left: -5%;
+            filter: brightness(0.95);
+            box-shadow: 55% -15% 0 0 currentColor;
+        }
+        
+        /* 图案5: 果冻块（圆角方块+高光） */
+        .cell.theme-bubble.shape-5 {
+            border-radius: 20%;
+        }
+        .cell.theme-bubble.shape-5::before {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 20%;
+            background: linear-gradient(rgba(255,255,255,0.6), transparent);
+            top: 10%;
+            left: 10%;
+            border-radius: 10px 10px 50% 50%;
+        }
+        .cell.theme-bubble.shape-5::after {
+            content: '';
+            position: absolute;
+            width: 15%;
+            height: 15%;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            top: 20%;
+            left: 20%;
+        }
+        
+        /* ============================================ */
+        /* 主题2：萌宠乐园 - CSS图案 */
+        /* ============================================ */
+        
+        /* 图案0: 猫咪头（圆脸+三角耳） */
+        .cell.theme-pet.shape-0 {
+            border-radius: 50%;
+        }
+        .cell.theme-pet.shape-0::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 20% solid transparent;
+            border-right: 20% solid transparent;
+            border-bottom: 30% solid currentColor;
+            top: -15%;
+            left: 5%;
+            filter: brightness(0.9);
+        }
+        .cell.theme-pet.shape-0::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 20% solid transparent;
+            border-right: 20% solid transparent;
+            border-bottom: 30% solid currentColor;
+            top: -15%;
+            right: 5%;
+            filter: brightness(0.9);
+        }
+        
+        /* 图案1: 小狗头（圆脸+垂耳） */
+        .cell.theme-pet.shape-1 {
+            border-radius: 50%;
+        }
+        .cell.theme-pet.shape-1::before {
+            content: '';
+            position: absolute;
+            width: 25%;
+            height: 40%;
+            background: currentColor;
+            border-radius: 50%;
+            top: -5%;
+            left: -8%;
+            filter: brightness(0.85);
+        }
+        .cell.theme-pet.shape-1::after {
+            content: '';
+            position: absolute;
+            width: 25%;
+            height: 40%;
+            background: currentColor;
+            border-radius: 50%;
+            top: -5%;
+            right: -8%;
+            filter: brightness(0.85);
+        }
+        
+        /* 图案2: 兔子头（圆脸+长耳） */
+        .cell.theme-pet.shape-2 {
+            border-radius: 50%;
+        }
+        .cell.theme-pet.shape-2::before {
+            content: '';
+            position: absolute;
+            width: 18%;
+            height: 45%;
+            background: currentColor;
+            border-radius: 50%;
+            top: -35%;
+            left: 20%;
+            filter: brightness(0.95);
+        }
+        .cell.theme-pet.shape-2::after {
+            content: '';
+            position: absolute;
+            width: 18%;
+            height: 45%;
+            background: currentColor;
+            border-radius: 50%;
+            top: -35%;
+            right: 20%;
+            filter: brightness(0.95);
+        }
+        
+        /* 图案3: 小熊头（圆脸+圆耳） */
+        .cell.theme-pet.shape-3 {
+            border-radius: 50%;
+        }
+        .cell.theme-pet.shape-3::before {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: currentColor;
+            border-radius: 50%;
+            top: -10%;
+            left: -5%;
+            filter: brightness(0.9);
+        }
+        .cell.theme-pet.shape-3::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: currentColor;
+            border-radius: 50%;
+            top: -10%;
+            right: -5%;
+            filter: brightness(0.9);
+        }
+        
+        /* 图案4: 熊猫头（圆脸+黑眼圈） */
+        .cell.theme-pet.shape-4 {
+            border-radius: 50%;
+        }
+        .cell.theme-pet.shape-4::before {
+            content: '';
+            position: absolute;
+            width: 25%;
+            height: 20%;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50%;
+            top: 30%;
+            left: 10%;
+        }
+        .cell.theme-pet.shape-4::after {
+            content: '';
+            position: absolute;
+            width: 25%;
+            height: 20%;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50%;
+            top: 30%;
+            right: 10%;
+        }
+        
+        /* 图案5: 青蛙头（圆脸+大眼） */
+        .cell.theme-pet.shape-5 {
+            border-radius: 50% 50% 45% 45%;
+        }
+        .cell.theme-pet.shape-5::before {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            top: 10%;
+            left: 10%;
+            box-shadow: inset 5px 5px 0 rgba(0,0,0,0.2);
+        }
+        .cell.theme-pet.shape-5::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            top: 10%;
+            right: 10%;
+            box-shadow: inset -5px 5px 0 rgba(0,0,0,0.2);
+        }
+        
+        /* ============================================ */
+        /* 主题3：水果派对 - CSS图案 */
+        /* ============================================ */
+        
+        /* 图案0: 苹果（圆润苹果形+叶子） */
+        .cell.theme-fruit.shape-0 {
+            border-radius: 45% 45% 50% 50%;
+        }
+        .cell.theme-fruit.shape-0::before {
+            content: '';
+            position: absolute;
+            width: 8%;
+            height: 15%;
+            background: rgba(139,90,43,0.8);
+            border-radius: 2px;
+            top: -5%;
+            left: 46%;
+        }
+        .cell.theme-fruit.shape-0::after {
+            content: '';
+            position: absolute;
+            width: 20%;
+            height: 15%;
+            background: rgba(34,139,34,0.7);
+            border-radius: 0 80% 0 80%;
+            top: -2%;
+            left: 55%;
+            transform: rotate(-30deg);
+        }
+        
+        /* 图案1: 橙子（圆形+纹理点） */
+        .cell.theme-fruit.shape-1 {
+            border-radius: 50%;
+        }
+        .cell.theme-fruit.shape-1::before {
+            content: '';
+            position: absolute;
+            width: 15%;
+            height: 15%;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            top: 25%;
+            left: 25%;
+            box-shadow: 20% 30% 0 rgba(255,255,255,0.2),
+                        35% -5% 0 rgba(255,255,255,0.2),
+                        -5% 35% 0 rgba(255,255,255,0.2);
+        }
+        .cell.theme-fruit.shape-1::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            top: 10%;
+            left: 10%;
+        }
+        
+        /* 图案2: 香蕉（弯月形） */
+        .cell.theme-fruit.shape-2 {
+            border-radius: 80% 20% 80% 20%;
+            transform: rotate(-20deg);
+        }
+        .cell.theme-fruit.shape-2::before {
+            content: '';
+            position: absolute;
+            width: 15%;
+            height: 15%;
+            background: rgba(139,90,43,0.6);
+            border-radius: 50%;
+            top: 5%;
+            left: 5%;
+        }
+        .cell.theme-fruit.shape-2::after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: rgba(255,255,255,0.2);
+            border-radius: 80% 20% 80% 20%;
+            top: 20%;
+            left: 20%;
+        }
+        
+        /* 图案3: 葡萄（3个小圆） */
+        .cell.theme-fruit.shape-3 {
+            border-radius: 50%;
+        }
+        .cell.theme-fruit.shape-3::before {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background: inherit;
+            border-radius: 50%;
+            top: -20%;
+            left: 25%;
+            filter: brightness(1.05);
+        }
+        .cell.theme-fruit.shape-3::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background: inherit;
+            border-radius: 50%;
+            top: 20%;
+            left: -10%;
+            filter: brightness(0.95);
+            box-shadow: 60% 0 0 0 currentColor;
+        }
+        
+        /* 图案4: 草莓（心形+点点） */
+        .cell.theme-fruit.shape-4 {
+            border-radius: 50% 50% 30% 30%;
+        }
+        .cell.theme-fruit.shape-4::before {
+            content: '';
+            position: absolute;
+            width: 8%;
+            height: 8%;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            top: 40%;
+            left: 30%;
+            box-shadow: 20% -15% 0 rgba(255,255,255,0.4),
+                        35% 5% 0 rgba(255,255,255,0.4),
+                        -10% 10% 0 rgba(255,255,255,0.4);
+        }
+        .cell.theme-fruit.shape-4::after {
+            content: '';
+            position: absolute;
+            width: 25%;
+            height: 20%;
+            background: rgba(34,139,34,0.7);
+            border-radius: 50% 50% 0 0;
+            top: -8%;
+            left: 37%;
+        }
+        
+        /* 图案5: 樱桃（两球+梗） */
+        .cell.theme-fruit.shape-5 {
+            border-radius: 50%;
+        }
+        .cell.theme-fruit.shape-5::before {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: inherit;
+            border-radius: 50%;
+            top: 25%;
+            left: -15%;
+            filter: brightness(1.05);
+        }
+        .cell.theme-fruit.shape-5::after {
+            content: '';
+            position: absolute;
+            width: 5%;
+            height: 25%;
+            background: rgba(34,139,34,0.8);
+            border-radius: 2px;
+            top: -15%;
+            left: 47%;
+        }
+        
+        /* ============================================ */
+        /* 主题4：星空梦 - CSS图案 */
+        /* ============================================ */
+        
+        /* 图案0: 星星（五角星） */
+        .cell.theme-star.shape-0 {
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+        .cell.theme-star.shape-0::before {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            top: 25%;
+            left: 35%;
+        }
+        
+        /* 图案1: 月亮（弯月） */
+        .cell.theme-star.shape-1 {
+            border-radius: 50%;
+        }
+        .cell.theme-star.shape-1::before {
+            content: '';
+            position: absolute;
+            width: 75%;
+            height: 75%;
+            background: inherit;
+            border-radius: 50%;
+            top: 10%;
+            left: 25%;
+            filter: brightness(1.2);
+        }
+        .cell.theme-star.shape-1::after {
+            content: '';
+            position: absolute;
+            width: 20%;
+            height: 20%;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            top: 20%;
+            left: 15%;
+        }
+        
+        /* 图案2: 太阳（圆形+光芒） */
+        .cell.theme-star.shape-2 {
+            border-radius: 50%;
+        }
+        .cell.theme-star.shape-2::before {
+            content: '';
+            position: absolute;
+            width: 15%;
+            height: 30%;
+            background: currentColor;
+            top: -25%;
+            left: 42.5%;
+            border-radius: 10px;
+            box-shadow: 0 130% 0 currentColor,
+                        -40% 40% 0 currentColor,
+                        40% 40% 0 currentColor,
+                        -40% 90% 0 currentColor,
+                        40% 90% 0 currentColor;
+            filter: brightness(1.1);
+        }
+        .cell.theme-star.shape-2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            top: 25%;
+            left: 25%;
+        }
+        
+        /* 图案3: 云朵（圆润云形） */
+        .cell.theme-star.shape-3 {
+            border-radius: 50%;
+        }
+        .cell.theme-star.shape-3::before {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: inherit;
+            border-radius: 50%;
+            top: -15%;
+            left: 20%;
+        }
+        .cell.theme-star.shape-3::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background: inherit;
+            border-radius: 50%;
+            top: 20%;
+            left: -10%;
+            box-shadow: 70% -10% 0 0 currentColor;
+        }
+        
+        /* 图案4: 流星（椭圆+尾巴） */
+        .cell.theme-star.shape-4 {
+            border-radius: 50%;
+        }
+        .cell.theme-star.shape-4::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 15%;
+            background: linear-gradient(90deg, currentColor, transparent);
+            top: 42.5%;
+            right: 60%;
+            border-radius: 10px;
+            opacity: 0.6;
+        }
+        .cell.theme-star.shape-4::after {
+            content: '';
+            position: absolute;
+            width: 25%;
+            height: 25%;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            top: 15%;
+            left: 15%;
+        }
+        
+        /* 图案5: 土星（圆形+环） */
+        .cell.theme-star.shape-5 {
+            border-radius: 50%;
+        }
+        .cell.theme-star.shape-5::before {
+            content: '';
+            position: absolute;
+            width: 140%;
+            height: 25%;
+            border: 3px solid currentColor;
+            border-radius: 50%;
+            top: 37.5%;
+            left: -20%;
+            transform: rotate(-15deg);
+            opacity: 0.7;
+        }
+        .cell.theme-star.shape-5::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            top: 20%;
+            left: 20%;
+        }
+        
+        /* ============================================ */
+        /* 主题5：甜点屋 - CSS图案 */
+        /* ============================================ */
+        
+        /* 图案0: 蛋糕（三角+奶油） */
+        .cell.theme-dessert.shape-0 {
+            clip-path: polygon(50% 10%, 90% 90%, 10% 90%);
+        }
+        .cell.theme-dessert.shape-0::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 15%;
+            background: rgba(255,255,255,0.6);
+            border-radius: 10px;
+            top: 20%;
+            left: 10%;
+        }
+        .cell.theme-dessert.shape-0::after {
+            content: '';
+            position: absolute;
+            width: 15%;
+            height: 20%;
+            background: rgba(255,0,0,0.6);
+            border-radius: 50% 50% 0 0;
+            top: 0;
+            left: 42.5%;
+        }
+        
+        /* 图案1: 饼干（圆形+巧克力豆） */
+        .cell.theme-dessert.shape-1 {
+            border-radius: 50%;
+        }
+        .cell.theme-dessert.shape-1::before {
+            content: '';
+            position: absolute;
+            width: 15%;
+            height: 15%;
+            background: rgba(101,67,33,0.7);
+            border-radius: 50%;
+            top: 25%;
+            left: 25%;
+            box-shadow: 30% 20% 0 rgba(101,67,33,0.7),
+                        10% 35% 0 rgba(101,67,33,0.7),
+                        35% -5% 0 rgba(101,67,33,0.7);
+        }
+        .cell.theme-dessert.shape-1::after {
+            content: '';
+            position: absolute;
+            width: 25%;
+            height: 25%;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            top: 10%;
+            left: 10%;
+        }
+        
+        /* 图案2: 冰淇淋（三角+波浪） */
+        .cell.theme-dessert.shape-2 {
+            clip-path: polygon(50% 5%, 95% 95%, 5% 95%);
+        }
+        .cell.theme-dessert.shape-2::before {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 20%;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            top: 15%;
+            left: 15%;
+        }
+        .cell.theme-dessert.shape-2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 15%;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            top: 35%;
+            left: 25%;
+        }
+        
+        /* 图案3: 甜甜圈（圆形+中洞） */
+        .cell.theme-dessert.shape-3 {
+            border-radius: 50%;
+        }
+        .cell.theme-dessert.shape-3::before {
+            content: '';
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            top: 30%;
+            left: 30%;
+        }
+        .cell.theme-dessert.shape-3::after {
+            content: '';
+            position: absolute;
+            width: 20%;
+            height: 20%;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            top: 15%;
+            left: 15%;
+        }
+        
+        /* 图案4: 糖果（长条+条纹） */
+        .cell.theme-dessert.shape-4 {
+            border-radius: 30%;
+        }
+        .cell.theme-dessert.shape-4::before {
+            content: '';
+            position: absolute;
+            width: 15%;
+            height: 80%;
+            background: rgba(255,255,255,0.4);
+            top: 10%;
+            left: 20%;
+            border-radius: 5px;
+        }
+        .cell.theme-dessert.shape-4::after {
+            content: '';
+            position: absolute;
+            width: 15%;
+            height: 80%;
+            background: rgba(255,255,255,0.4);
+            top: 10%;
+            right: 20%;
+            border-radius: 5px;
+        }
+        
+        /* 图案5: 布丁（半圆+焦糖） */
+        .cell.theme-dessert.shape-5 {
+            border-radius: 10% 10% 50% 50%;
+        }
+        .cell.theme-dessert.shape-5::before {
+            content: '';
+            position: absolute;
+            width: 90%;
+            height: 25%;
+            background: rgba(139,90,43,0.6);
+            border-radius: 10px;
+            top: 5%;
+            left: 5%;
+        }
+        .cell.theme-dessert.shape-5::after {
+            content: '';
+            position: absolute;
+            width: 25%;
+            height: 25%;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            top: 35%;
+            left: 20%;
+        }
+        
+        /* ============================================ */
+        /* 主题6：卡通乐园 - CSS图案（保留原有设计） */
+        /* ============================================ */
+        
+        /* 图案0: 爱心 */
+        .cell.theme-cartoon.shape-0 {
+            background: transparent !important;
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(-45deg);
+        }
+        .cell.theme-cartoon.shape-0::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: 50% 50% 0 50%;
+            top: -50%;
+            left: 0;
+        }
+        .cell.theme-cartoon.shape-0::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: 50% 50% 0 50%;
+            top: 0;
+            left: -50%;
+        }
+        
+        /* 图案1: 小花 */
+        .cell.theme-cartoon.shape-1 {
+            border-radius: 50%;
+        }
+        .cell.theme-cartoon.shape-1::before {
+            content: '';
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: rgba(255,225,135,0.9);
+            border-radius: 50%;
+            top: 30%;
+            left: 30%;
+        }
+        .cell.theme-cartoon.shape-1::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: inherit;
+            border-radius: 50%;
+            top: 10%;
+            left: 35%;
+            box-shadow:
+                20px 10px 0 currentColor,
+                -5px 20px 0 currentColor,
+                20px 20px 0 currentColor,
+                7px 30px 0 currentColor;
+        }
+        
+        /* 图案2: 小鱼 */
+        .cell.theme-cartoon.shape-2 {
+            border-radius: 60% 40% 40% 60%;
+        }
+        .cell.theme-cartoon.shape-2::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-top: 25% solid transparent;
+            border-bottom: 25% solid transparent;
+            border-right: 30% solid currentColor;
+            right: -20%;
+            top: 25%;
+            filter: brightness(0.85);
+        }
+        .cell.theme-cartoon.shape-2::after {
+            content: '';
+            position: absolute;
+            width: 18%;
+            height: 18%;
+            background: white;
+            border-radius: 50%;
+            top: 30%;
+            left: 20%;
+            box-shadow: inset 3px 0 0 #333;
+        }
+        
+        /* 图案3: 小树叶 */
+        .cell.theme-cartoon.shape-3 {
+            border-radius: 0 80% 0 80%;
+            transform: rotate(45deg);
+        }
+        .cell.theme-cartoon.shape-3::before {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 3px;
+            background: rgba(255,255,255,0.5);
+            top: 48%;
+            left: 20%;
+            transform: rotate(-45deg);
+        }
+        .cell.theme-cartoon.shape-3::after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 3px;
+            background: rgba(255,255,255,0.5);
+            top: 48%;
+            left: 20%;
+            transform: rotate(45deg);
+        }
+        
+        /* 图案4: 小星星 */
+        .cell.theme-cartoon.shape-4 {
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+        .cell.theme-cartoon.shape-4::before {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            top: 25%;
+            left: 35%;
+        }
+        
+        /* 图案5: 小太阳 */
+        .cell.theme-cartoon.shape-5 {
+            border-radius: 50%;
+        }
+        .cell.theme-cartoon.shape-5::before {
+            content: '';
+            position: absolute;
+            width: 130%;
+            height: 130%;
+            top: -15%;
+            left: -15%;
+            background: currentColor;
+            clip-path: polygon(
+                50% 0%, 56% 20%, 75% 5%, 62% 25%, 90% 15%, 65% 35%,
+                100% 50%, 65% 55%, 90% 85%, 62% 65%, 75% 95%, 56% 70%,
+                50% 100%, 44% 70%, 25% 95%, 38% 65%, 10% 85%, 35% 55%,
+                0% 50%, 35% 35%, 10% 15%, 38% 25%, 25% 5%, 44% 20%
+            );
+        }
+        .cell.theme-cartoon.shape-5::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background: rgba(255,165,0,0.7);
+            border-radius: 50%;
+            top: 25%;
+            left: 25%;
+        }
+        
+        /* 游戏控制按钮 */
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .game-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            color: #666;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .game-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 皮肤页面 */
+        .skin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .skin-card {
+            background: rgba(255,255,255,0.8);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .skin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .skin-card.equipped {
+            border-color: #FF69B4;
+            box-shadow: 0 0 20px rgba(255,105,180,0.3);
+        }
+        
+        .skin-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .skin-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .skin-preview {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .skin-shape {
+            width: 28px;
+            height: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skin-color {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+        }
+        
+        .skin-status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* 设置页面 */
+        .settings-list {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .setting-item {
+            background: rgba(255,255,255,0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .setting-label {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .toggle-switch {
+            width: 50px;
+            height: 26px;
+            background: #DDD;
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background: #98D8C8;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .toggle-switch.active::after {
+            left: 26px;
+        }
+        
+        .reset-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: #FFB6C1;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            background: #FF69B4;
+        }
+        
+        /* 自定义模式 */
+        .custom-options {
+            max-width: 400px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.8);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        
+        .option-group {
+            margin-bottom: 25px;
+        }
+        
+        .option-label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .option-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF6B9D;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #E0E0E0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #FF69B4;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        .start-custom-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .start-custom-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,105,180,0.3);
+        }
+        
+        /* 弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+            animation: modalPop 0.3s ease;
+        }
+        
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #FF6B9D;
+            margin-bottom: 15px;
+        }
+        
+        .modal-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn-primary {
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            color: white;
+        }
+        
+        .modal-btn-secondary {
+            background: #F0F0F0;
+            color: #666;
+        }
+        
+        /* 胜利动画 */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 999;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: confettiFall linear forwards;
+        }
+        
+        @keyframes confettiFall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        /* 计算中提示 */
+        .calculating {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 主页 -->
+    <div id="homePage" class="page active">
+        <div class="bg-decor bg-decor-1"></div>
+        <div class="bg-decor bg-decor-2"></div>
+        <div class="bg-decor bg-decor-3"></div>
+        <div class="bg-decor bg-decor-4"></div>
+        <div class="bg-decor bg-decor-5"></div>
+        <div class="bg-decor bg-decor-6"></div>
+        <div class="bg-decor bg-decor-7"></div>
+        <div class="bg-decor bg-decor-8"></div>
+        <div class="bg-star bg-star-1"></div>
+        <div class="bg-star bg-star-2"></div>
+        <div class="bg-star bg-star-3"></div>
+        <div class="bg-star bg-star-4"></div>
+        <h1 class="game-title">萌染大作战</h1>
+        <button class="menu-btn btn-pink" onclick="showPage('levelPage')">开始冒险</button>
+        <button class="menu-btn btn-blue" onclick="showPage('skinPage')">主题皮肤</button>
+        <button class="menu-btn btn-green" onclick="showPage('settingsPage')">设置</button>
+    </div>
+    
+    <!-- 关卡选择页 -->
+    <div id="levelPage" class="page">
+        <div class="page-header">
+            <button class="back-btn" onclick="showPage('homePage')">←</button>
+            <span class="page-title">选择关卡</span>
+            <button class="back-btn" onclick="showPage('customPage')">🔧</button>
+        </div>
+        <div class="level-path">
+            <div class="path-line"></div>
+            <div class="level-nodes" id="levelNodes"></div>
+        </div>
+    </div>
+    
+    <!-- 游戏页 -->
+    <div id="gamePage" class="page">
+        <div class="page-header">
+            <button class="back-btn" onclick="exitGame()">←</button>
+            <span class="page-title" id="gameTitle">第1关</span>
+            <div style="width:40px"></div>
+        </div>
+        <div class="game-header">
+            <div class="game-info">
+                <div class="info-item">最少: <span id="minSteps">-</span>步</div>
+                <div class="info-item">当前: <span id="stepCount">0</span>步</div>
+                <div class="info-item">进度: <span id="progressText">0%</span></div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="step-progress-bar">
+                <div class="step-progress-fill" id="stepProgressFill" style="width: 0%"></div>
+                <div class="step-progress-marker" id="stepMarker" style="left: 0%"></div>
+            </div>
+            <div class="calculating" id="calculatingText"></div>
+        </div>
+        <div class="game-board" id="gameBoard"></div>
+        <div class="game-controls">
+            <button class="game-btn" id="undoBtn" onclick="undoMove()" disabled>↩️ 撤销</button>
+            <button class="game-btn" onclick="restartLevel()">🔄 重开</button>
+            <button class="game-btn" onclick="exitGame()">📋 返回</button>
+        </div>
+    </div>
+    
+    <!-- 皮肤页 -->
+    <div id="skinPage" class="page">
+        <div class="page-header">
+            <button class="back-btn" onclick="showPage('homePage')">←</button>
+            <span class="page-title">主题皮肤</span>
+            <div style="width:40px"></div>
+        </div>
+        <div class="skin-grid" id="skinGrid"></div>
+    </div>
+    
+    <!-- 设置页 -->
+    <div id="settingsPage" class="page">
+        <div class="page-header">
+            <button class="back-btn" onclick="showPage('homePage')">←</button>
+            <span class="page-title">设置</span>
+            <div style="width:40px"></div>
+        </div>
+        <div class="settings-list">
+            <div class="setting-item">
+                <span class="setting-label">音效</span>
+                <div class="toggle-switch active" id="soundToggle" onclick="toggleSound()"></div>
+            </div>
+            <button class="reset-btn" onclick="resetProgress()">🗑️ 重置游戏进度</button>
+        </div>
+    </div>
+    
+    <!-- 自定义模式页 -->
+    <div id="customPage" class="page">
+        <div class="page-header">
+            <button class="back-btn" onclick="showPage('levelPage')">←</button>
+            <span class="page-title">自定义模式</span>
+            <div style="width:40px"></div>
+        </div>
+        <div class="custom-options">
+            <div class="option-group">
+                <label class="option-label">棋盘大小</label>
+                <div class="option-value" id="sizeValue">6</div>
+                <input type="range" class="slider" id="sizeSlider" min="4" max="12" value="6" oninput="updateSlider('sizeSlider', 'sizeValue')">
+            </div>
+            <div class="option-group">
+                <label class="option-label">颜色数量</label>
+                <div class="option-value" id="colorValue">4</div>
+                <input type="range" class="slider" id="colorSlider" min="3" max="6" value="4" oninput="updateSlider('colorSlider', 'colorValue')">
+            </div>
+            <button class="start-custom-btn" onclick="startCustomGame()">🎮 开始游戏</button>
+        </div>
+    </div>
+    
+    <!-- 弹窗 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-title" id="modalTitle">标题</div>
+            <div class="modal-text" id="modalText">内容</div>
+            <div class="modal-buttons" id="modalButtons"></div>
+        </div>
+    </div>
+    
+    <!-- 胜利动画 -->
+    <div class="confetti-container" id="confettiContainer"></div>
+    
+    <script>
+        // 游戏数据
+        const THEMES = [
+            { id: 'bubble', name: '泡泡糖', unlockLevel: 0, colors: ['#FF9AA2', '#B5EAD7', '#FFDAC1', '#E2F0CB', '#C7CEEA', '#FFB7B2'] },
+            { id: 'pet', name: '萌宠乐园', unlockLevel: 5, colors: ['#FFB7B2', '#C7CEEA', '#FFDAC1', '#B5EAD7', '#E2F0CB', '#95DAC7'] },
+            { id: 'fruit', name: '水果派对', unlockLevel: 10, colors: ['#FF6B6B', '#FFA500', '#FFE135', '#9B59B6', '#FF6B6B', '#DC143C'] },
+            { id: 'star', name: '星空梦', unlockLevel: 15, colors: ['#FFD700', '#C7CEEA', '#FFD700', '#E8E8E8', '#C7CEEA', '#B5EAD7'] },
+            { id: 'dessert', name: '甜点屋', unlockLevel: 20, colors: ['#FFB7B2', '#D2691E', '#FFDAC1', '#D2691E', '#FF9AA2', '#D2691E'] },
+            { id: 'cartoon', name: '卡通乐园', unlockLevel: 25, colors: ['#FF6B9D', '#FFB6C1', '#87CEEB', '#98D8C8', '#DDA0DD', '#FFD700'] }
+        ];
+        
+        const LEVEL_CONFIG = [
+            { level: 1, size: 4, colors: 3 }, { level: 2, size: 4, colors: 4 },
+            { level: 3, size: 5, colors: 4 }, { level: 4, size: 5, colors: 5 },
+            { level: 5, size: 5, colors: 6 }, { level: 6, size: 6, colors: 4 },
+            { level: 7, size: 6, colors: 5 }, { level: 8, size: 6, colors: 6 },
+            { level: 9, size: 7, colors: 5 }, { level: 10, size: 7, colors: 6 },
+            { level: 11, size: 7, colors: 6 }, { level: 12, size: 7, colors: 6 },
+            { level: 13, size: 8, colors: 5 }, { level: 14, size: 8, colors: 6 },
+            { level: 15, size: 8, colors: 6 }, { level: 16, size: 8, colors: 6 },
+            { level: 17, size: 9, colors: 6 }, { level: 18, size: 9, colors: 6 },
+            { level: 19, size: 10, colors: 6 }, { level: 20, size: 10, colors: 6 },
+            { level: 21, size: 10, colors: 6 }, { level: 22, size: 12, colors: 6 },
+            { level: 23, size: 12, colors: 6 }, { level: 24, size: 14, colors: 6 },
+            { level: 25, size: 14, colors: 6 }, { level: 26, size: 14, colors: 6 },
+            { level: 27, size: 16, colors: 6 }, { level: 28, size: 16, colors: 6 },
+            { level: 29, size: 18, colors: 6 }, { level: 30, size: 20, colors: 6 }
+        ];
+        
+        let gameState = {
+            currentLevel: 1,
+            completedLevels: [],
+            levelStars: {},
+            equippedTheme: 'bubble',
+            board: [],
+            size: 4,
+            colorCount: 3,
+            steps: 0,
+            history: [],
+            connected: new Set(),
+            isCustom: false,
+            soundEnabled: true,
+            minSteps: null
+        };
+        
+        // 预加载缓存：{ level: { board, minSteps } }
+        const preloadCache = {};
+        
+        async function preloadNextLevel() {
+            if (gameState.isCustom) return;
+            const nextLevel = gameState.currentLevel + 1;
+            if (nextLevel > 30 || preloadCache[nextLevel]) return;
+            
+            setTimeout(async () => {
+                const config = LEVEL_CONFIG[nextLevel - 1];
+                const board = [];
+                for (let i = 0; i < config.size; i++) {
+                    board[i] = [];
+                    for (let j = 0; j < config.size; j++) {
+                        board[i][j] = Math.floor(Math.random() * config.colors);
+                    }
+                }
+                const minSteps = await calculateMinStepsAsync_inner(board, config.size, config.colors) || config.size * 2;
+                preloadCache[nextLevel] = { board, minSteps };
+            }, 500);
+        }
+        
+        function init() {
+            loadGameData();
+            renderLevelNodes();
+            renderSkinGrid();
+        }
+        
+        function loadGameData() {
+            const saved = localStorage.getItem('mengRanData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                gameState.completedLevels = data.completedLevels || [];
+                gameState.levelStars = data.levelStars || {};
+                gameState.equippedTheme = data.equippedTheme || 'bubble';
+                gameState.soundEnabled = data.soundEnabled !== false;
+            }
+        }
+        
+        function saveGameData() {
+            localStorage.setItem('mengRanData', JSON.stringify({
+                completedLevels: gameState.completedLevels,
+                levelStars: gameState.levelStars,
+                equippedTheme: gameState.equippedTheme,
+                soundEnabled: gameState.soundEnabled
+            }));
+        }
+        
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            if (pageId === 'levelPage') renderLevelNodes();
+            if (pageId === 'skinPage') renderSkinGrid();
+        }
+        
+        function renderLevelNodes() {
+            const container = document.getElementById('levelNodes');
+            container.innerHTML = '';
+            const maxCompleted = Math.max(...gameState.completedLevels, 0);
+            
+            for (let i = 1; i <= 30; i++) {
+                const node = document.createElement('div');
+                node.className = 'level-node';
+                node.textContent = i;
+                
+                if (gameState.completedLevels.includes(i)) {
+                    node.classList.add('completed');
+                    const stars = gameState.levelStars[i] || 1;
+                    node.innerHTML = `${i}<div class="stars">${'★'.repeat(stars)}</div>`;
+                    node.onclick = () => startLevel(i);
+                } else if (i === maxCompleted + 1) {
+                    node.classList.add('current');
+                    node.onclick = () => startLevel(i);
+                } else if (i <= maxCompleted + 1) {
+                    node.classList.add('available');
+                    node.onclick = () => startLevel(i);
+                } else {
+                    node.classList.add('locked');
+                }
+                
+                container.appendChild(node);
+            }
+        }
+        
+        // 创建皮肤预览的小图案
+        function createShapePreview(themeId, colorIdx, color) {
+            const shape = document.createElement('div');
+            shape.className = 'skin-shape';
+            shape.style.background = color;
+            
+            // 根据主题添加不同的样式
+            switch(themeId) {
+                case 'bubble':
+                    if (colorIdx === 0) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 1) { shape.style.borderRadius = '0 50% 50% 50%'; shape.style.transform = 'rotate(45deg)'; }
+                    else if (colorIdx === 2) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 3) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 4) shape.style.borderRadius = '50%';
+                    else shape.style.borderRadius = '20%';
+                    break;
+                case 'pet':
+                    shape.style.borderRadius = '50%';
+                    break;
+                case 'fruit':
+                    if (colorIdx === 0) shape.style.borderRadius = '45% 45% 50% 50%';
+                    else if (colorIdx === 1) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 2) { shape.style.borderRadius = '80% 20% 80% 20%'; shape.style.transform = 'rotate(-20deg)'; }
+                    else if (colorIdx === 3) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 4) shape.style.borderRadius = '50% 50% 30% 30%';
+                    else shape.style.borderRadius = '50%';
+                    break;
+                case 'star':
+                    if (colorIdx === 0) shape.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+                    else if (colorIdx === 1) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 2) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 3) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 4) shape.style.borderRadius = '50%';
+                    else shape.style.borderRadius = '50%';
+                    break;
+                case 'dessert':
+                    if (colorIdx === 0) shape.style.clipPath = 'polygon(50% 10%, 90% 90%, 10% 90%)';
+                    else if (colorIdx === 1) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 2) shape.style.clipPath = 'polygon(50% 5%, 95% 95%, 5% 95%)';
+                    else if (colorIdx === 3) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 4) shape.style.borderRadius = '30%';
+                    else shape.style.borderRadius = '10% 10% 50% 50%';
+                    break;
+                case 'cartoon':
+                    if (colorIdx === 0) { shape.style.borderRadius = '50% 50% 0 50%'; shape.style.transform = 'rotate(-45deg)'; }
+                    else if (colorIdx === 1) shape.style.borderRadius = '50%';
+                    else if (colorIdx === 2) shape.style.borderRadius = '60% 40% 40% 60%';
+                    else if (colorIdx === 3) { shape.style.borderRadius = '0 80% 0 80%'; shape.style.transform = 'rotate(45deg)'; }
+                    else if (colorIdx === 4) shape.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+                    else shape.style.borderRadius = '50%';
+                    break;
+            }
+            
+            return shape;
+        }
+        
+        function renderSkinGrid() {
+            const container = document.getElementById('skinGrid');
+            container.innerHTML = '';
+            const maxCompleted = Math.max(...gameState.completedLevels, 0);
+            
+            THEMES.forEach(theme => {
+                const card = document.createElement('div');
+                const isLocked = maxCompleted < theme.unlockLevel;
+                const isEquipped = gameState.equippedTheme === theme.id;
+                
+                card.className = 'skin-card' + (isLocked ? ' locked' : '') + (isEquipped ? ' equipped' : '');
+                
+                let previewHTML = '<div class="skin-preview">';
+                theme.colors.forEach((color, idx) => {
+                    previewHTML += `<div class="skin-shape" style="background:${color}"></div>`;
+                });
+                previewHTML += '</div>';
+                
+                card.innerHTML = `
+                    <div class="skin-name">${theme.name}</div>
+                    ${previewHTML}
+                    <div class="skin-status">${isEquipped ? '✓ 已装备' : (isLocked ? `🔒 通关第${theme.unlockLevel}关解锁` : '点击装备')}</div>
+                `;
+                
+                // 应用形状样式
+                const preview = card.querySelector('.skin-preview');
+                preview.innerHTML = '';
+                theme.colors.forEach((color, idx) => {
+                    preview.appendChild(createShapePreview(theme.id, idx, color));
+                });
+                
+                if (!isLocked && !isEquipped) {
+                    card.onclick = () => {
+                        gameState.equippedTheme = theme.id;
+                        saveGameData();
+                        renderSkinGrid();
+                    };
+                }
+                
+                container.appendChild(card);
+            });
+        }
+        
+        function startLevel(level) {
+            const config = LEVEL_CONFIG[level - 1];
+            gameState.currentLevel = level;
+            gameState.size = config.size;
+            gameState.colorCount = config.colors;
+            gameState.isCustom = false;
+            startGame();
+        }
+        
+        function startCustomGame() {
+            gameState.size = parseInt(document.getElementById('sizeSlider').value);
+            gameState.colorCount = parseInt(document.getElementById('colorSlider').value);
+            gameState.isCustom = true;
+            startGame();
+        }
+        
+        function startGame() {
+            gameState.steps = 0;
+            gameState.history = [];
+            gameState.minSteps = null;
+            
+            // 检查是否有预加载缓存
+            const cached = !gameState.isCustom && preloadCache[gameState.currentLevel];
+            if (cached) {
+                gameState.board = cached.board;
+                gameState.minSteps = cached.minSteps;
+                delete preloadCache[gameState.currentLevel];
+                updateConnected();
+                saveState();
+                
+                document.getElementById('gameTitle').textContent = gameState.isCustom ? '自定义模式' : `第${gameState.currentLevel}关`;
+                document.getElementById('minSteps').textContent = gameState.minSteps;
+                document.getElementById('calculatingText').textContent = '';
+                showPage('gamePage');
+                renderBoard();
+                updateGameUI();
+            } else {
+                initBoard();
+                
+                document.getElementById('gameTitle').textContent = gameState.isCustom ? '自定义模式' : `第${gameState.currentLevel}关`;
+                document.getElementById('minSteps').textContent = '-';
+                document.getElementById('calculatingText').textContent = '正在计算最少步数...';
+                showPage('gamePage');
+                renderBoard();
+                updateGameUI();
+                
+                setTimeout(() => {
+                    calculateMinStepsAsync();
+                }, 100);
+            }
+            
+            // 预加载下一关
+            preloadNextLevel();
+        }
+        
+        // BFS算法计算最少通关步数（优化版）
+        function calculateMinSteps(board, size, colorCount) {
+            // 大棋盘用贪心近似
+            if (size * size > 100) {
+                return greedyMinSteps(board, size, colorCount);
+            }
+            
+            // 紧凑棋盘表示：一维数组
+            function toFlat(b) {
+                const flat = new Uint8Array(size * size);
+                for (let i = 0; i < size; i++)
+                    for (let j = 0; j < size; j++)
+                        flat[i * size + j] = b[i][j];
+                return flat;
+            }
+            
+            // 获取连通区域信息（原地修改visited数组避免GC）
+            const _visited = new Uint8Array(size * size);
+            const _borderColors = new Uint8Array(colorCount);
+            
+            function getRegionInfo(flat) {
+                _visited.fill(0);
+                _borderColors.fill(0);
+                const startColor = flat[0];
+                let regionSize = 0;
+                const stack = [0];
+                _visited[0] = 1;
+                
+                while (stack.length > 0) {
+                    const pos = stack.pop();
+                    regionSize++;
+                    const r = (pos / size) | 0;
+                    const c = pos % size;
+                    
+                    const neighbors = [];
+                    if (r > 0) neighbors.push(pos - size);
+                    if (r < size - 1) neighbors.push(pos + size);
+                    if (c > 0) neighbors.push(pos - 1);
+                    if (c < size - 1) neighbors.push(pos + 1);
+                    
+                    for (let k = 0; k < 4; k++) {
+                        const np = neighbors[k];
+                        if (flat[np] === startColor) {
+                            if (!_visited[np]) { _visited[np] = 1; stack.push(np); }
+                        } else {
+                            _borderColors[flat[np]]++;
+                        }
+                    }
+                }
+                
+                return { regionSize, borderColors: _borderColors, startColor };
+            }
+            
+            // 状态key：连通区域大小 + 边界颜色分布
+            function stateKey(flat) {
+                const info = getRegionInfo(flat);
+                let key = info.regionSize;
+                for (let i = 0; i < colorCount; i++) key = key * 16 + info.borderColors[i];
+                return key;
+            }
+            
+            // 执行颜色填充（原地操作，调用者负责复制）
+            function floodFill(flat, newColor) {
+                const startColor = flat[0];
+                if (startColor === newColor) return false;
+                
+                _visited.fill(0);
+                const stack = [0];
+                _visited[0] = 1;
+                
+                while (stack.length > 0) {
+                    const pos = stack.pop();
+                    flat[pos] = newColor;
+                    const r = (pos / size) | 0;
+                    const c = pos % size;
+                    
+                    if (r > 0 && flat[pos - size] === startColor && !_visited[pos - size]) { _visited[pos - size] = 1; stack.push(pos - size); }
+                    if (r < size - 1 && flat[pos + size] === startColor && !_visited[pos + size]) { _visited[pos + size] = 1; stack.push(pos + size); }
+                    if (c > 0 && flat[pos - 1] === startColor && !_visited[pos - 1]) { _visited[pos - 1] = 1; stack.push(pos - 1); }
+                    if (c < size - 1 && flat[pos + 1] === startColor && !_visited[pos + 1]) { _visited[pos + 1] = 1; stack.push(pos + 1); }
+                }
+                return true;
+            }
+            
+            // 检查胜利
+            function checkWin(flat) {
+                const first = flat[0];
+                const total = size * size;
+                for (let i = 1; i < total; i++) {
+                    if (flat[i] !== first) return false;
+                }
+                return true;
+            }
+            
+            // BFS
+            const startFlat = toFlat(board);
+            const visited = new Map(); // key -> steps
+            const queue = [startFlat];
+            visited.set(stateKey(startFlat), 0);
+            let head = 0;
+            const maxSteps = 50;
+            
+            while (head < queue.length) {
+                const currentFlat = queue[head++];
+                const currentKey = stateKey(currentFlat);
+                const steps = visited.get(currentKey);
+                
+                if (steps >= maxSteps) continue;
+                
+                // 按边界数量排序：优先选能吞并更多格子的颜色
+                const info = getRegionInfo(currentFlat);
+                const candidates = [];
+                for (let c = 0; c < colorCount; c++) {
+                    if (c === info.startColor || info.borderColors[c] === 0) continue;
+                    candidates.push({ color: c, gain: info.borderColors[c] });
+                }
+                candidates.sort((a, b) => b.gain - a.gain);
+                
+                for (const { color } of candidates) {
+                    const newFlat = new Uint8Array(currentFlat);
+                    floodFill(newFlat, color);
+                    
+                    if (checkWin(newFlat)) return steps + 1;
+                    
+                    const key = stateKey(newFlat);
+                    if (!visited.has(key)) {
+                        visited.set(key, steps + 1);
+                        queue.push(newFlat);
+                    }
+                }
+            }
+            
+            return null;
+        }
+        
+        // 贪心近似算法（用于大棋盘）
+        function greedyMinSteps(board, size, colorCount) {
+            const flat = new Uint8Array(size * size);
+            for (let i = 0; i < size; i++)
+                for (let j = 0; j < size; j++)
+                    flat[i * size + j] = board[i][j];
+            
+            let steps = 0;
+            const maxSteps = size * 3;
+            
+            while (steps < maxSteps) {
+                const first = flat[0];
+                let allSame = true;
+                for (let i = 1; i < flat.length; i++) {
+                    if (flat[i] !== first) { allSame = false; break; }
+                }
+                if (allSame) return steps;
+                
+                // 找连通区域和边界颜色
+                const visited = new Uint8Array(size * size);
+                const borderColors = new Uint8Array(colorCount);
+                const stack = [0];
+                visited[0] = 1;
+                
+                while (stack.length > 0) {
+                    const pos = stack.pop();
+                    const r = (pos / size) | 0, c = pos % size;
+                    const neighbors = [];
+                    if (r > 0) neighbors.push(pos - size);
+                    if (r < size - 1) neighbors.push(pos + size);
+                    if (c > 0) neighbors.push(pos - 1);
+                    if (c < size - 1) neighbors.push(pos + 1);
+                    for (const np of neighbors) {
+                        if (flat[np] === first && !visited[np]) { visited[np] = 1; stack.push(np); }
+                        else if (flat[np] !== first) borderColors[flat[np]]++;
+                    }
+                }
+                
+                // 选边界最多的颜色
+                let bestColor = -1, bestGain = 0;
+                for (let c = 0; c < colorCount; c++) {
+                    if (c === first || borderColors[c] === 0) continue;
+                    if (borderColors[c] > bestGain) { bestGain = borderColors[c]; bestColor = c; }
+                }
+                if (bestColor === -1) break;
+                
+                // 填充
+                const v2 = new Uint8Array(size * size);
+                const s2 = [0]; v2[0] = 1;
+                while (s2.length > 0) {
+                    const pos = s2.pop();
+                    flat[pos] = bestColor;
+                    const r = (pos / size) | 0, c = pos % size;
+                    if (r > 0 && flat[pos - size] === first && !v2[pos - size]) { v2[pos - size] = 1; s2.push(pos - size); }
+                    if (r < size - 1 && flat[pos + size] === first && !v2[pos + size]) { v2[pos + size] = 1; s2.push(pos + size); }
+                    if (c > 0 && flat[pos - 1] === first && !v2[pos - 1]) { v2[pos - 1] = 1; s2.push(pos - 1); }
+                    if (c < size - 1 && flat[pos + 1] === first && !v2[pos + 1]) { v2[pos + 1] = 1; s2.push(pos + 1); }
+                }
+                steps++;
+            }
+            
+            return steps;
+        }
+        
+        // 异步计算最少步数（分片执行，不阻塞UI）
+        async function calculateMinStepsAsync() {
+            try {
+                const startTime = Date.now();
+                const result = await calculateMinStepsAsync_inner(
+                    gameState.board, gameState.size, gameState.colorCount
+                );
+                const elapsed = Date.now() - startTime;
+                
+                if (result !== null) {
+                    gameState.minSteps = result;
+                    document.getElementById('minSteps').textContent = result;
+                    document.getElementById('calculatingText').textContent = `计算完成 (${elapsed}ms)`;
+                } else {
+                    gameState.minSteps = gameState.size * 2;
+                    document.getElementById('minSteps').textContent = gameState.minSteps + '*';
+                    document.getElementById('calculatingText').textContent = '使用估算值';
+                }
+                
+                updateGameUI();
+            } catch (e) {
+                console.error('计算最少步数出错:', e);
+                gameState.minSteps = gameState.size * 2;
+                document.getElementById('minSteps').textContent = gameState.minSteps + '*';
+                document.getElementById('calculatingText').textContent = '计算超时，使用估算值';
+            }
+            
+            setTimeout(() => {
+                document.getElementById('calculatingText').textContent = '';
+            }, 3000);
+        }
+        
+        // 异步BFS：每处理200个节点让出一次主线程
+        async function calculateMinStepsAsync_inner(board, size, colorCount) {
+            if (size * size > 100) {
+                return greedyMinSteps(board, size, colorCount);
+            }
+            
+            function toFlat(b) {
+                const flat = new Uint8Array(size * size);
+                for (let i = 0; i < size; i++)
+                    for (let j = 0; j < size; j++)
+                        flat[i * size + j] = b[i][j];
+                return flat;
+            }
+            
+            const _visited = new Uint8Array(size * size);
+            const _borderColors = new Uint8Array(colorCount);
+            
+            function getRegionInfo(flat) {
+                _visited.fill(0);
+                _borderColors.fill(0);
+                const startColor = flat[0];
+                let regionSize = 0;
+                const stack = [0];
+                _visited[0] = 1;
+                while (stack.length > 0) {
+                    const pos = stack.pop();
+                    regionSize++;
+                    const r = (pos / size) | 0, c = pos % size;
+                    if (r > 0) { const np = pos - size; if (flat[np] === startColor) { if (!_visited[np]) { _visited[np] = 1; stack.push(np); } } else _borderColors[flat[np]]++; }
+                    if (r < size - 1) { const np = pos + size; if (flat[np] === startColor) { if (!_visited[np]) { _visited[np] = 1; stack.push(np); } } else _borderColors[flat[np]]++; }
+                    if (c > 0) { const np = pos - 1; if (flat[np] === startColor) { if (!_visited[np]) { _visited[np] = 1; stack.push(np); } } else _borderColors[flat[np]]++; }
+                    if (c < size - 1) { const np = pos + 1; if (flat[np] === startColor) { if (!_visited[np]) { _visited[np] = 1; stack.push(np); } } else _borderColors[flat[np]]++; }
+                }
+                return { regionSize, startColor };
+            }
+            
+            function stateKey(flat) {
+                const info = getRegionInfo(flat);
+                let key = info.regionSize;
+                for (let i = 0; i < colorCount; i++) key = key * 16 + _borderColors[i];
+                return key;
+            }
+            
+            function floodFill(flat, newColor) {
+                const startColor = flat[0];
+                if (startColor === newColor) return false;
+                _visited.fill(0);
+                const stack = [0]; _visited[0] = 1;
+                while (stack.length > 0) {
+                    const pos = stack.pop();
+                    flat[pos] = newColor;
+                    const r = (pos / size) | 0, c = pos % size;
+                    if (r > 0 && flat[pos - size] === startColor && !_visited[pos - size]) { _visited[pos - size] = 1; stack.push(pos - size); }
+                    if (r < size - 1 && flat[pos + size] === startColor && !_visited[pos + size]) { _visited[pos + size] = 1; stack.push(pos + size); }
+                    if (c > 0 && flat[pos - 1] === startColor && !_visited[pos - 1]) { _visited[pos - 1] = 1; stack.push(pos - 1); }
+                    if (c < size - 1 && flat[pos + 1] === startColor && !_visited[pos + 1]) { _visited[pos + 1] = 1; stack.push(pos + 1); }
+                }
+                return true;
+            }
+            
+            function checkWin(flat) {
+                const first = flat[0];
+                for (let i = 1; i < flat.length; i++) if (flat[i] !== first) return false;
+                return true;
+            }
+            
+            const startFlat = toFlat(board);
+            const visited = new Map();
+            const queue = [startFlat];
+            visited.set(stateKey(startFlat), 0);
+            let head = 0;
+            const maxSteps = 50;
+            let processed = 0;
+            const BATCH = 200;
+            
+            // 让出主线程的辅助函数
+            const yield = () => new Promise(r => setTimeout(r, 0));
+            
+            while (head < queue.length) {
+                const currentFlat = queue[head++];
+                const currentKey = stateKey(currentFlat);
+                const steps = visited.get(currentKey);
+                
+                if (steps >= maxSteps) continue;
+                
+                const info = getRegionInfo(currentFlat);
+                const candidates = [];
+                for (let c = 0; c < colorCount; c++) {
+                    if (c === info.startColor || _borderColors[c] === 0) continue;
+                    candidates.push({ color: c, gain: _borderColors[c] });
+                }
+                candidates.sort((a, b) => b.gain - a.gain);
+                
+                for (const { color } of candidates) {
+                    const newFlat = new Uint8Array(currentFlat);
+                    floodFill(newFlat, color);
+                    
+                    if (checkWin(newFlat)) return steps + 1;
+                    
+                    const key = stateKey(newFlat);
+                    if (!visited.has(key)) {
+                        visited.set(key, steps + 1);
+                        queue.push(newFlat);
+                    }
+                }
+                
+                // 每处理BATCH个节点让出主线程
+                processed++;
+                if (processed % BATCH === 0) await yield();
+            }
+            
+            return null;
+        }
+        
+        function initBoard() {
+            gameState.board = [];
+            for (let i = 0; i < gameState.size; i++) {
+                gameState.board[i] = [];
+                for (let j = 0; j < gameState.size; j++) {
+                    gameState.board[i][j] = Math.floor(Math.random() * gameState.colorCount);
+                }
+            }
+            updateConnected();
+            saveState();
+        }
+        
+        function updateConnected() {
+            gameState.connected = new Set();
+            const startColor = gameState.board[0][0];
+            const queue = [[0, 0]];
+            
+            while (queue.length > 0) {
+                const [r, c] = queue.shift();
+                const key = `${r},${c}`;
+                if (gameState.connected.has(key)) continue;
+                gameState.connected.add(key);
+                
+                [[-1,0],[1,0],[0,-1],[0,1]].forEach(([dr,dc]) => {
+                    const nr = r + dr, nc = c + dc;
+                    if (nr >= 0 && nr < gameState.size && nc >= 0 && nc < gameState.size) {
+                        if (gameState.board[nr][nc] === startColor) queue.push([nr, nc]);
+                    }
+                });
+            }
+        }
+        
+        function saveState() {
+            gameState.history.push({
+                board: gameState.board.map(row => [...row]),
+                steps: gameState.steps
+            });
+            if (gameState.history.length > 20) gameState.history.shift();
+        }
+        
+        function undoMove() {
+            if (gameState.history.length <= 1) return;
+            gameState.history.pop();
+            const prev = gameState.history[gameState.history.length - 1];
+            gameState.board = prev.board.map(row => [...row]);
+            gameState.steps = prev.steps;
+            updateConnected();
+            renderBoard();
+            updateGameUI();
+        }
+        
+        function onCellClick(row, col) {
+            const newColor = gameState.board[row][col];
+            const currentColor = gameState.board[0][0];
+            if (newColor === currentColor) return;
+            
+            saveState();
+            gameState.connected.forEach(key => {
+                const [r, c] = key.split(',').map(Number);
+                gameState.board[r][c] = newColor;
+            });
+            gameState.steps++;
+            updateConnected();
+            renderBoard();
+            updateGameUI();
+            
+            if (checkWin()) setTimeout(onWin, 300);
+        }
+        
+        function checkWin() {
+            const first = gameState.board[0][0];
+            for (let i = 0; i < gameState.size; i++) {
+                for (let j = 0; j < gameState.size; j++) {
+                    if (gameState.board[i][j] !== first) return false;
+                }
+            }
+            return true;
+        }
+        
+        function onWin() {
+            let stars = 0;
+            
+            if (!gameState.isCustom && gameState.minSteps !== null) {
+                // 严格星级评价逻辑
+                const minSteps = gameState.minSteps;
+                if (gameState.steps <= minSteps) {
+                    stars = 3;
+                } else if (gameState.steps <= minSteps + 5) {
+                    stars = 2;
+                } else if (gameState.steps <= minSteps + 10) {
+                    stars = 1;
+                }
+                // 超过最少步数+10步，不记录通关
+                
+                // 只有获得星级才记录通关
+                if (stars > 0) {
+                    if (!gameState.completedLevels.includes(gameState.currentLevel)) {
+                        gameState.completedLevels.push(gameState.currentLevel);
+                    }
+                    if (!gameState.levelStars[gameState.currentLevel] || stars > gameState.levelStars[gameState.currentLevel]) {
+                        gameState.levelStars[gameState.currentLevel] = stars;
+                    }
+                    saveGameData();
+                }
+            } else if (gameState.isCustom) {
+                // 自定义模式，默认给1星
+                stars = 1;
+            }
+            
+            showConfetti();
+            
+            const buttons = [
+                { text: '返回关卡', action: () => { closeModal(); showPage('levelPage'); } }
+            ];
+            
+            // 只有获得星级才能进入下一关
+            if (!gameState.isCustom && stars > 0 && gameState.currentLevel < 30) {
+                buttons.unshift({ text: '下一关', action: () => { closeModal(); startLevel(gameState.currentLevel + 1); }, primary: true });
+            }
+            
+            let resultText = `你用了 ${gameState.steps} 步完成本关！`;
+            
+            if (stars > 0) {
+                const starText = !gameState.isCustom ? ` ${'★'.repeat(stars)}` : '';
+                setTimeout(() => {
+                    showModal('🎉 恭喜通关！', resultText + starText, buttons);
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    showModal('😅 继续加油！', resultText + '\n\n超过最少步数+10步，无法获得星级。\n请重新挑战获取星级！', [
+                        { text: '重新挑战', action: () => { closeModal(); restartLevel(); }, primary: true },
+                        { text: '返回关卡', action: () => { closeModal(); showPage('levelPage'); } }
+                    ]);
+                }, 500);
+            }
+        }
+        
+        function renderBoard() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+            board.style.gridTemplateColumns = `repeat(${gameState.size}, 1fr)`;
+            
+            const maxWidth = Math.min(350, window.innerWidth - 40);
+            const cellSize = Math.floor((maxWidth - (gameState.size - 1) * 4) / gameState.size);
+            const theme = THEMES.find(t => t.id === gameState.equippedTheme);
+            
+            // 根据格子大小计算缩放比例（图案基于40px设计）
+            const scale = Math.min(1, cellSize / 40);
+            
+            for (let i = 0; i < gameState.size; i++) {
+                for (let j = 0; j < gameState.size; j++) {
+                    const colorIdx = gameState.board[i][j];
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.style.width = cellSize + 'px';
+                    cell.style.height = cellSize + 'px';
+                    
+                    // 为所有主题添加CSS图案类
+                    cell.classList.add(`theme-${theme.id}`, `shape-${colorIdx}`);
+                    cell.style.background = theme.colors[colorIdx];
+                    
+                    // 小格子时缩放图案
+                    if (scale < 1) {
+                        cell.style.zoom = scale;
+                    }
+                    
+                    if (gameState.connected.has(`${i},${j}`)) cell.classList.add('connected');
+                    cell.onclick = () => onCellClick(i, j);
+                    board.appendChild(cell);
+                }
+            }
+        }
+        
+        function updateGameUI() {
+            document.getElementById('stepCount').textContent = gameState.steps;
+            const progress = Math.round((gameState.connected.size / (gameState.size * gameState.size)) * 100);
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = progress + '%';
+            document.getElementById('undoBtn').disabled = gameState.history.length <= 1;
+            
+            // 更新步数进度条
+            if (gameState.minSteps !== null && gameState.minSteps > 0) {
+                const maxDisplay = gameState.minSteps + 15;
+                const stepProgress = Math.min(100, (gameState.steps / maxDisplay) * 100);
+                document.getElementById('stepProgressFill').style.width = stepProgress + '%';
+                document.getElementById('stepMarker').style.left = (gameState.minSteps / maxDisplay * 100) + '%';
+            } else {
+                document.getElementById('stepProgressFill').style.width = '0%';
+                document.getElementById('stepMarker').style.left = '0%';
+            }
+        }
+        
+        function restartLevel() {
+            gameState.steps = 0;
+            gameState.history = [];
+            gameState.minSteps = null;
+            initBoard();
+            
+            document.getElementById('minSteps').textContent = '-';
+            document.getElementById('calculatingText').textContent = '正在计算最少步数...';
+            renderBoard();
+            updateGameUI();
+            
+            // 重新计算最少步数
+            setTimeout(() => {
+                calculateMinStepsAsync();
+            }, 100);
+        }
+        
+        function exitGame() {
+            showPage('levelPage');
+        }
+        
+        function showModal(title, text, buttons) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalText').textContent = text;
+            const container = document.getElementById('modalButtons');
+            container.innerHTML = '';
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'modal-btn ' + (btn.primary ? 'modal-btn-primary' : 'modal-btn-secondary');
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                container.appendChild(button);
+            });
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+        
+        function showConfetti() {
+            const container = document.getElementById('confettiContainer');
+            container.innerHTML = '';
+            const colors = ['#FF9AA2', '#B5EAD7', '#FFDAC1', '#E2F0CB', '#C7CEEA', '#FFB7B2'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+                container.appendChild(confetti);
+            }
+            setTimeout(() => container.innerHTML = '', 5000);
+        }
+        
+        function updateSlider(sliderId, valueId) {
+            document.getElementById(valueId).textContent = document.getElementById(sliderId).value;
+        }
+        
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            document.getElementById('soundToggle').classList.toggle('active', gameState.soundEnabled);
+            saveGameData();
+        }
+        
+        function resetProgress() {
+            showModal('确认重置', '确定要重置所有进度吗？', [
+                { text: '取消', action: closeModal },
+                { text: '确定', action: () => {
+                    gameState.completedLevels = [];
+                    gameState.equippedTheme = 'bubble';
+                    saveGameData();
+                    closeModal();
+                    showModal('完成', '游戏进度已重置！', [{ text: '确定', action: closeModal }]);
+                }, primary: true }
+            ]);
+        }
+        
+        window.addEventListener('resize', () => {
+            if (document.getElementById('gamePage').classList.contains('active')) {
+                renderBoard();
+            }
+        });
+        
+        init();
+    </script>
+</body>
+</html>
